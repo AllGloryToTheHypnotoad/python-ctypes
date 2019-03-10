@@ -1,0 +1,10 @@
+cmake_minimum_required (VERSION 3.7)
+project(HELLO)
+set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
+
+IF( WIN32 )
+	MESSAGE("Windows not supported ... ha, ha, ha, your OS sucks!")
+ELSE( WIN32 )
+	add_library(hello SHARED hello.c)
+ENDIF( WIN32 )
