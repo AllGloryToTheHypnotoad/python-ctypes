@@ -1,13 +1,62 @@
 import numpy
 import ctypes
 
+try:
+    # do the dll one from ctypes
+    # _libhello = ctypes.cdll.LoadLibrary('./src/lib/libhello.dylib')
+    _libhello = numpy.ctypeslib.load_library('libhello.dylib', './src/lib')
+    # _libhello = numpy.ctypeslib.load_library('libhello.a', './src/build')
+except OSError as e:
+    print(e)
+    exit(1)
 
-# do the dll one from ctypes
-_libhello = numpy.ctypeslib.load_library('libhello.dylib', './src/lib')
+print("_libhello", _libhello)
 
-_libhello.hello.argtypes = [ctypes.c_int]
-_libhello.hello.restype = ctypes.c_int
+# input/output of cos function
+_libhello.hcos.argtypes = [ctypes.c_double]
+_libhello.hcos.restype = ctypes.c_double
 
 
-def hellofunc(n):
-	return _libhello.hello(int(n))
+def cos(n):
+    return _libhello.hcos(float(n))
+
+
+# input/output of test function
+_libhello.test.argtypes = [ctypes.c_int]
+_libhello.test.restype = ctypes.c_int
+
+
+def test(n):
+    return _libhello.test(int(n))
+
+
+_testarray = _libhello.testarray
+_testarray.argtypes = [ctypes.POINTER(ctypes.c_double)]
+_testarray.restype = ctypes.c_void_p
+
+
+def testarray():
+    p = (ctypes.c_double*5)()
+    print("p", p)
+    _testarray(p)
+    print(len(p))
+    return tuple(p)
+
+# c++ objects
+# http://www.auctoris.co.uk/2017/04/29/calling-c-classes-from-python-with-ctypes/
+
+
+class ClassTest(object):
+    def __init__(self):
+        _libhello.new_test.argtypes = [ctypes.c_void_p]
+        _libhello.new_test.restypes = ctypes.c_void_p
+
+        _libhello.read.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_double)]
+        _libhello.read.restypes = ctypes.c_void_p
+
+        self.obj = _libhello.new_test(None)
+        self.buffer = (ctypes.c_double*5)()
+
+    def read(self):
+        _libhello.read(self.obj, self.buffer)
+        return tuple(self.buffer)

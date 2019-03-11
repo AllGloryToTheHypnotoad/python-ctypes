@@ -1,32 +1,40 @@
 from __future__ import print_function
 from setuptools import setup
-# from hello import __version__ as VERSION
 from build_utils import BuildCommand
 from build_utils import PublishCommand
 from build_utils import BinaryDistribution
 from build_utils import get_pkg_version
-from shutil import rmtree
+import shutil          # move and delete files/folders
 import os
+import sys
 
-# read in like text file
-# version = {}
-# with open("hello/meta.py") as fp:
-# 	exec(fp.read(), version)
-# VERSION = version['__version__']
+if sys.version_info.major != 3 and sys.version_info.minor >= 5:
+    raise Exception("Python 3.5 or higher is supported")
 
-# VERSION = get_pkg_version('hello/__init__.py')
+
+def mkdir(path):
+    try:
+        os.mkdir(path)
+    except FileExistsError:
+        # folder was already created ... it's ok
+        pass
+
+
+def rmdir(path):
+    try:
+        shutil.rmtree(path)
+    except FileNotFoundError:
+        # folder was already deleted or doesn't exist ... it's ok
+        pass
+
 
 # setup c
 print('Building C ---------------------------')
-os.system('rm -fr src/build')
-# rmtree()
-os.system('mkdir -p src/build')
-# try:
-# 	os.mkdir('src/build')
-# except OSError:
-# 	pass
-
-os.system('cd src/build && cmake .. && make')
+# rmdir("src/build")
+mkdir("src/build")
+os.chdir("src/build")
+os.system('cmake .. && make')
+os.chdir("../..")
 
 BinaryDistribution.binary = True
 
@@ -37,21 +45,20 @@ BuildCommand.test = False
 PublishCommand.pkg = PACKAGE_NAME
 
 VERSION = get_pkg_version('hello/__init__.py')
-# from hello import __version__ as VERSION
 PublishCommand.version = VERSION
 
 setup(
-	name=PACKAGE_NAME,
-	version=VERSION,
-	description='test ext modules',
-	packages=['hello'],
-	package_data={
-		'hello': ['src/lib/libhello.dylib'],
-	},
-	install_requires=['build_utils'],
-	distclass=BinaryDistribution,
-	cmdclass={
-		'publish': PublishCommand,
-		'make': BuildCommand
-	}
+    name=PACKAGE_NAME,
+    version=VERSION,
+    description='test ext modules',
+    packages=['hello'],
+    package_data={
+        'hello': ['src/lib/libhello.dylib'],
+    },
+    install_requires=['build_utils'],
+    distclass=BinaryDistribution,
+    cmdclass={
+        'publish': PublishCommand,
+        'make': BuildCommand
+    }
 )
