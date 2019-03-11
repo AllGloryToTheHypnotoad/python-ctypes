@@ -2,23 +2,22 @@
 
 # Python and C
 
+![](pics/py.jpg)
+
 ## C Extensions
 
-Sample repo for C extensions.
+Sample repo for C, C++, and class extensions.
 
 ## `ctypes`
 
-Need to automate this part::
+build:
 
- 	cd src
-	mkdir build
-	cd build
-	cmake ..
-	make
+```bash
+python setup.py make
+```
 
-then::
+then run:
 
-	python setup.py make
-
-.. image:: pics/py.jpg
-	:alt: funny
+```bash
+./test-c.py
+```
