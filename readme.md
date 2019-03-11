@@ -4,13 +4,11 @@
 
 ![](pics/py.jpg)
 
-## C Extensions
+## ctypes
 
 Sample repo for C, C++, and class extensions.
 
-## `ctypes`
-
-build:
+build the c++ library and setup the python package
 
 ```bash
 python setup.py make
