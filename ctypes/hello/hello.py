@@ -54,9 +54,24 @@ class ClassTest(object):
         _libhello.read.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_double)]
         _libhello.read.restypes = ctypes.c_void_p
 
+        _libhello.readprotected.argtypes = [ctypes.c_void_p]
+        _libhello.readprotected.restypes = ctypes.c_void_p  # ctypes.POINTER(ctypes.c_double)
+
         self.obj = _libhello.new_test(None)
         self.buffer = (ctypes.c_double*5)()
 
     def read(self):
+        print("self.obj", self.obj)
         _libhello.read(self.obj, self.buffer)
+        print("post read")
         return tuple(self.buffer)
+
+    def readprotected(self):
+        print("readprotected obj", self.obj)
+        # a = _libhello.readprotected(self.obj)
+        _libhello.readprotected(self.obj)
+        # print(a)
+        # aa = [0]*10
+        # for i in range(10):
+        #     aa[i] = a[i]
+        # return tuple(aa)

@@ -6,14 +6,23 @@ from hello import test
 from hello import cos
 from hello import testarray, ClassTest
 
-print("Test cos(5)", cos(5), pycos(5) == cos(5))
-print("Test test(5)", test(5), test(5) == 25)
+cos5 = cos(5)
+test5 = test(5)
+print("Test cos(5)", cos5, pycos(5) == cos5)
+print("Test test(5)", test5, test5 == 25)
 
 # a = [1,2,3,4,5]
-a = testarray()
-for v in a:
-    print(v)
+# a = testarray()
+# for v in a:
+#     print(v)
 
 c = ClassTest()
 a = c.read()
-print(a)
+a = c.read()
+a = c.read()
+# print(a)
+a = c.readprotected()
+# aa = [0]*10
+# for i in range(10):
+#     aa[i] = a[i]
+# print(aa)
